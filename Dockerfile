@@ -52,51 +52,18 @@ RUN echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:jammy";' | t
 RUN apt update -y && apt install -y firefox
 RUN apt update -y && apt install -y xubuntu-icon-theme
 RUN mkdir -p /root/.vnc
-RUN (echo 'xduyhoangg123' && echo 'xduyhoangg123') | vncpasswd && chmod 600 /root/.vnc/passwd
+RUN (echo '1234' && echo '1234') | vncpasswd && chmod 600 /root/.vnc/passwd
 # Setup SSH
 RUN mkdir -p /var/run/sshd && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
-    echo 'root:hoang1234' | chpasswd
+    echo 'root:lemem1234' | chpasswd
 # Create xstartup for XFCE
 RUN echo '#!/bin/sh' > /root/.vnc/xstartup && \
     echo '[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources' >> /root/.vnc/xstartup && \
     echo 'vncconfig -iconic &' >> /root/.vnc/xstartup && \
     echo 'dbus-launch --exit-with-session xfce4-session' >> /root/.vnc/xstartup && \
     chmod +x /root/.vnc/xstartup
-# Create note file
-RUN cat > /root/note.txt << 'EOF'
-Cần Thuê VPS/VNC giá rẻ ib
-Discord : duyhoangg.v2
-Fb : User.DuyHoangg
-EOF
-# Create startup script for apps
-RUN cat > /root/start_apps.sh << 'EOF'
-#!/bin/bash
-sleep 5
-firefox https://www.facebook.com/User.DuyHoangg &
-sleep 3
-wmctrl -a "Firefox Web Browser" || wmctrl -a Firefox
-sleep 1
-mousepad /root/note.txt &
-sleep 2
-wmctrl -a Mousepad || wmctrl -a "Mousepad Text Editor"
-EOF
-RUN chmod +x /root/start_apps.sh
-# Autostart script
-RUN mkdir -p /root/.config/autostart && \
-    cat > /root/.config/autostart/start_apps.desktop << 'EOF'
-[Desktop Entry]
-Type=Application
-Exec=/root/start_apps.sh
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-Name=Start Apps
-Comment=Start Applications
-Icon=utilities-terminal
-Categories=Utility;
-EOF
 RUN echo '<!DOCTYPE html><html><head><title>duyhoangg.v2</title><script>window.location.replace("vnc.html?autoconnect=1&resize=scale&fullscreen=1");</script></head><body></body></html>' > /usr/share/novnc/index.html
 RUN touch /root/.Xauthority
 # Expose ports (SSH 22, Netdata 19999, VNC 5901/6080)
